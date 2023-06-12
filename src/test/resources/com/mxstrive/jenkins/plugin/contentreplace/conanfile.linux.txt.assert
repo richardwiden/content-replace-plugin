@@ -1,0 +1,75 @@
+[requires]
+range-v3/0.12.0
+boost/1.78.0
+poco/1.11.1
+ms-gsl/3.1.0
+cpython/3.9.7
+pybind11/2.9.1
+pybind11_json/0.2.11
+gtest/1.11.0
+nlohmann_json/3.10.4
+benchmark/1.6.0
+nvtx/3.0.1
+termcolor/2.0.0
+date/3.0.1
+tclap/1.2.5
+fast-cpp-csv-parser/cci.20200830
+sde-cmake-helpers/0.6
+sde-plcommon/0.7
+sde-gpucommon/0.6
+# conflict overrides
+zlib/1.2.13 # boost needs 1.2.12, pcre needs 1.2.13
+expat/2.5.0 # cpython needs 2.4.1, poco needs 2.5.0
+tbb/2019_u9 # Required to make parallel STL work on GCC 11. Not used on Windows.
+
+[options]
+sde-plcommon:use_nvtx=False # Set to True to enable NVTX profiling markers.
+
+tbb:shared=False
+
+date:header_only=True # We don't use tz.h, so we get rid of libcurl dependency.
+
+cpython:shared=True # Doesn't build properly on Windows without it. See: https://github.com/conan-io/conan-center-index/issues/9333
+#cpython:with_bz2=False
+cpython:with_curses=False # Option doesn't exist on Windows. At least not for Python 3.7.
+cpython:with_gdbm=False # Option doesn't exist on Windows. At least not for Python 3.7.
+#cpython:with_lzma=False
+cpython:with_nis=False # Option doesn't exist on Windows. At least not for Python 3.7.
+#cpython:with_sqlite3=False # cpython Conan recipe breaks if sqlite3 is not enabled.
+cpython:with_tkinter=False
+
+# We get rid of many dependencies by slashing POCO.
+poco:enable_activerecord=False
+poco:enable_apacheconnector=False
+poco:enable_cppparser=False
+poco:enable_crypto=False
+poco:enable_data=False
+poco:enable_data_mysql=False
+poco:enable_data_odbc=False
+poco:enable_data_postgresql=False
+poco:enable_data_sqlite=False
+poco:enable_encodings=False
+poco:enable_fork=False # Linux only.
+poco:enable_json=False
+poco:enable_jwt=False
+poco:enable_mongodb=False
+poco:enable_net=False
+poco:enable_netssl=False
+poco:enable_pagecompiler=False
+poco:enable_pagecompiler_file2page=False
+poco:enable_pdf=False
+poco:enable_pocodoc=False
+poco:enable_redis=False
+poco:enable_sevenzip=False
+poco:enable_util=True # Required for enable_zip.
+poco:enable_xml=True  # Required for enable_zip.
+poco:enable_zip=True
+
+[generators]
+cmake_multi
+
+[imports]
+., license* -> ./ThirdPartyLicenses @ folder=True, ignore_case=True
+
+[tool_requires]
+patchelf/0.13
